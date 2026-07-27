@@ -1,0 +1,84 @@
+Work only in:
+/home/alcazarjuanc/ai-stack/benchmarks/qwopus-np4/repos/agent-a-ingestion
+
+Do not ask questions or request confirmation.
+Edit files directly.
+Use Python 3 standard library only.
+No network. No package installation.
+
+Modify only:
+- pipeline.py
+- test_pipeline.py
+
+Implement:
+
+1. load_csv(path)
+- UTF-8 CSV.
+- Return list[dict].
+- Preserve row order.
+
+2. validate_schema(rows, required_columns)
+- True only when every row contains every required column.
+
+3. remove_duplicates(rows, key_columns=None)
+- Return a new list.
+- Preserve first occurrence and order.
+- key_columns=None compares complete rows.
+- Otherwise compare requested columns.
+- Do not mutate input.
+
+4. handle_missing_numeric(rows, columns)
+- Missing: None, empty, or whitespace.
+- Convert nonmissing requested values to float.
+- Impute missing values with column mean.
+- Return new dictionaries.
+- Do not mutate input.
+- ValueError for invalid numeric data or a column with no usable values.
+
+5. numeric_summary(rows, columns)
+- Ignore missing values.
+- Convert numeric values to float.
+- Return:
+  {column: {"count": int, "mean": float, "min": float, "max": float}}
+- ValueError if a requested column has no usable values.
+
+TEST REQUIREMENTS:
+
+Write exactly 8 concise top-level pytest tests in test_pipeline.py.
+Keep test_pipeline.py under 120 lines.
+
+Tests must cover:
+- CSV loading
+- schema validation
+- complete-row deduplication
+- key-column deduplication
+- missing-value imputation
+- input immutability
+- numeric summary
+- ValueError behavior
+
+Before pytest, verify that test_pipeline.py actually contains tests:
+grep -c '^def test_' test_pipeline.py
+
+The result MUST be 8.
+If it is not 8, fix the test file before continuing.
+
+Then run exactly once:
+python3 -m pytest -q
+
+If it passes:
+run git diff -- pipeline.py test_pipeline.py
+and finish.
+
+If it fails:
+DO NOT repeat the same pytest command immediately.
+
+Run exactly once:
+python3 -m pytest -x -vv || true
+
+Read the first failure, inspect the relevant code, make a targeted fix, then run:
+python3 -m pytest -q
+
+Never run the same failing command repeatedly without first diagnosing and editing the code.
+
+Finish only when all 8 tests pass.

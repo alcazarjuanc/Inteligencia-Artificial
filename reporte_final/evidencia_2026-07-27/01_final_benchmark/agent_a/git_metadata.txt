@@ -1,0 +1,10 @@
+===== STATUS =====
+ M pipeline.py
+ M test_pipeline.py
+?? __pycache__/
+
+===== HEAD =====
+1406704a06249190b6e020377d05d5045bea8bad
+
+===== LOG =====
+1406704 (HEAD -> master, tag: baseline) benchmark baseline

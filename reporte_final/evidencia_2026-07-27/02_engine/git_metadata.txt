@@ -1,0 +1,61 @@
+===== BRANCH =====
+qwen36-stable-safe-boundary-partial-tool-window-documented
+
+===== HEAD =====
+71b3a7b09b3cda12c10b82ded58f920de9b97c02
+
+===== STATUS =====
+ M common/speculative.cpp
+ M examples/server/server-context.cpp
+
+===== RECENT COMMITS =====
+71b3a7b09 (HEAD -> qwen36-stable-safe-boundary-partial-tool-window-documented, tag: qwen36-safe-boundary-partial-tool-window-documented, qwen36-safe-boundary-only-partial-reprefill-v1, qwen36-experiment-same-seq-only-ubatch, qwen36-experiment-mtp-parallel-slots-no-guard) Document safe-boundary partial tool-window validation
+44770bfbf (tag: qwen36-safe-boundary-partial-tool-window-v1, qwen36-stable-safe-boundary-partial-tool-window) Allow safe-boundary partial reprefill on tool mismatch
+2c1f701c8 (tag: qwen36-mixed-ubatch-scope-diag-v1) Diagnose mixed ubatch scope contamination
+94d70f67d (tag: qwen36-safe-boundary-only-periodic-checkpoints-v1, qwen36-stable-safe-boundary-only-periodic-checkpoints) Add safe boundary only periodic checkpoints
+f2dd18758 (tag: qwen36-slot-affinity-flag-template-final-documented, qwen36-stable-slot-affinity-flag-template-final, qwen36-investigate-cache-prompt-tool-edit-mismatch) Document Qwen3.6 slot affinity flag and final template validation
+86a33032d (tag: qwen36-slot-affinity-flag-default-off, qwen36-stable-slot-affinity-flag-default-off) Add optional repo-scope slot affinity flag
+19720584b (tag: qwen36-edit-arguments-canonical-roundtrip-v1-documented) Document Qwen3.6 Edit argument roundtrip validation
+40aa1c99f (tag: qwen36-edit-arguments-canonical-roundtrip-v1) Canonicalize Edit tool arguments for Qwen3.6 roundtrip
+0770f3f95 (tag: qwen36-np2-slot-affinity-tool-edit-guard-documented, qwen36-stable-np2-slot-affinity-tool-edit-guard, qwen36-slot-affinity-from-message-spans-partial-v1, qwen36-investigate-tool-edit-cache-prompt-mismatch) Document NP2 slot affinity tool edit guard validation
+bae6c70cf (tag: qwen36-np2-slot-affinity-tool-edit-guard-validated) Guard partial reprefill on tool edit mismatches
+f65bf3392 (tag: qwen36-stable-fallback-message-spans-partial-reprefill-min-v1, qwen36-stable-fallback-message-spans-user-end-v1) Add minimal message spans partial reprefill
+c96c4e21e (tag: qwen36-np3-recurrent-cache-mismatch-reprefill-validated, qwen36-stable-np3-recurrent-cache-mismatch-reprefill) Guard recurrent prompt cache reuse on mismatch
+5c9afcedf (qwen36-np3-next-investigation-from-layer-d-v2) Guard prompt cache load by normalized repo scope
+10f26b298 (qwen36-stable-np3-layer-d-v2-clean-logs, qwen36-layer-d-v2-clean-logs) Document Qwen3.6 NP3 Layer D validation history
+2a8903ab2 (tag: qwen36-4577-np3-layer-d-v2-clean-logs-validated) Clean Layer D recurrent ubatch split diagnostics
+02ba39d31 (tag: qwen36-4576-np3-layer-d-v2-kernel-valid-prefix-validated, qwen36-stable-np3-layer-d-v2-kernel-valid-prefix, qwen36-4576-np3-diagnosis-from-stable) Add Layer D kernel-valid recurrent ubatch prefix split
+b66d55efd (tag: qwen36-modern-recurrent-ubatch-helper-4576, tag: qwen36-4576-np2-checkpoints24-openclaude-ab-validated, qwen36-stable-np2-checkpoints24-openclaude-ab, qwen36-layer-d-run-aware-from-4576) Refactor recurrent ubatch split into helper
+4c3682be3 (tag: qwen36-modern-recurrent-server-cleanup-4575) Refactor slot-scoped recurrent server cache cleanup
+11f247df8 (qwen36-abc-clean-scope-isolation) Isolate recurrent slot cache by repo scope
+c67592140 Use slot-scoped recurrent cache clear for checkpoint fallback
+531bb1239 Log chat boundary checkpoint decisions
+2eaa93785 Tune dynamic chat boundary min step for larger checkpoint pool
+a3c2ee5fe (tag: qwen36-np2-122k-checkpoints16-dynamic-minstep-openclaude-validated) Re-enable dynamic min step for chat boundary checkpoints
+43375f2e7 Set chat boundary checkpoint min step to 256
+74ecd68ab (tag: qwen36-multi-boundary-dynamic-minstep-np1-validated) Use dynamic min step for forced chat boundary checkpoints
+ae9b8f841 Track multiple chat user boundary checkpoints
+b2086b2ca Document boundary checkpoint skip refinement
+cf595b858 (tag: qwen36-np2-122k-boundary-skip-ordinary-checkpoints-validated) Skip interval checkpoints before chat boundary
+405b218f9 Skip ordinary prompt checkpoints before chat boundary
+1cd8c7968 Track known chat boundary checkpoint state
+0b84d6b0e (tag: qwen36-np2-122k-chat-boundary-documented-validated) Document validated Qwen3.6 np2 chat-boundary checkpoint preset
+24f57b585 (tag: qwen36-np2-122k-chat-boundary-checkpoints-openclaude-parallel-validated, tag: qwen36-chat-boundary-checkpoints-np1-validated) Add ChatML fallback for server message spans
+95e2687b5 Populate chat message spans for ChatML templates
+28d563451 Trigger checkpoint at chat user boundary
+a4d98abb9 Compute chat boundary checkpoint token position
+118622e29 Add slot field for chat boundary checkpoint position
+93d4d408c Forward chat message spans to server tasks
+3650f488a Populate chat message spans for boundary checkpoints
+5410e99fa Port chat message span extraction support
+3957a2413 (tag: qwen36-np2-cb-122k-checkpoints8-4096-final-documented-validated, qwen36-np2-cb-122k-optimize-mixed-seq-fallback, qwen36-checkpoint-boundary-analysis) Fix validated Qwen3.6 preset tag documentation
+81d4604b5 Document validated Qwen3.6 np2 122k preset
+0e9d780ef (tag: qwen36-np2-cb-122k-checkpoints8-4096-recurrent-cache-and-log-validated) Clarify Qwen3Next recurrent-safe ubatch split log
+84b37b0f5 (tag: qwen36-np2-cb-122k-checkpoints8-4096-drop-empty-recurrent-cache-validated, qwen36-np2-cb-122k-optimize-recurrent-fallback) Drop empty recurrent prompt-cache checkpoints
+9e387b0c6 (tag: qwen36-np2-cb-122k-checkpoints8-4096-launcher-validated) Add validated Qwen3.6 np2 122k checkpoint launcher
+55e921d91 (tag: qwen36-np2-nocb-stable-serialized-55e921d91, tag: qwen36-np2-nocb-stable-serialized, tag: qwen36-np2-cb-122k-parallel-validated-55e921d91, tag: qwen36-np2-cb-122k-checkpoints8-8192-parallel-candidate, tag: qwen36-np2-cb-122k-checkpoints8-4096-parallel-validated, tag: qwen36-np2-cb-122k-checkpoints8-4096-parallel-candidate, tag: qwen36-np2-cb-122k-checkpoints16-4096-parallel-validated, tag: qwen36-np2-cb-122k-checkpoints16-2048-parallel-validated, qwen36-recurrent-safe-cb-from-working-base, qwen36-np2-cb-parallel-tests) Add initial recurrent-safe batching guards for Qwen3Next
+5ceba8267 (tag: qwen36-combined-tail-checkpoints, ik_llama_combined) Tune forced tail checkpoint minimum step to 256
+9b2064c0e Suppress near-duplicate forced tail checkpoints
+01c2ea07b Reset forced prompt-tail checkpoint flag after use
+44d4a3e73 Allow forced prompt-tail checkpoints to bypass spacing
+cfd8e28c9 (tag: qwen36-combined-checkpoints) Port llama.cpp checkpoint lifecycle improvements

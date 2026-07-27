@@ -1,0 +1,214 @@
+diff --git a/pipeline.py b/pipeline.py
+index bbac3de..4d8495f 100644
+--- a/pipeline.py
++++ b/pipeline.py
+@@ -1,21 +1,115 @@
+ """CSV ingestion and preprocessing utilities."""
+ 
++import csv
++import copy
++
+ 
+ def load_csv(path):
+-    raise NotImplementedError
++    """Load a UTF-8 CSV file and return a list of dicts preserving row order."""
++    with open(path, newline="", encoding="utf-8") as f:
++        reader = csv.DictReader(f)
++        return [dict(row) for row in reader]
+ 
+ 
+ def validate_schema(rows, required_columns):
+-    raise NotImplementedError
++    """Return True only when every row contains every required column."""
++    for row in rows:
++        for col in required_columns:
++            if col not in row:
++                return False
++    return True
+ 
+ 
+ def remove_duplicates(rows, key_columns=None):
+-    raise NotImplementedError
++    """Return a new list with duplicates removed, preserving first occurrence and order.
++
++    key_columns=None compares complete rows; otherwise compares requested columns.
++    """
++    seen = set()
++    result = []
++    for row in rows:
++        if key_columns is None:
++            key = tuple(sorted(row.items()))
++        else:
++            key = tuple(row[c] for c in key_columns)
++        if key not in seen:
++            seen.add(key)
++            result.append(row)
++    return result
++
++
++def _is_missing(val):
++    """Return True if a value is None, empty string, or whitespace-only."""
++    return val is None or (isinstance(val, str) and val.strip() == "")
+ 
+ 
+ def handle_missing_numeric(rows, columns):
+-    raise NotImplementedError
++    """Impute missing numeric values with column means.
++
++    Missing: None, empty, or whitespace.
++    Convert nonmissing requested values to float.
++    Return new dictionaries without mutating input.
++    """
++    # First pass: collect usable values per column to compute means
++    col_sums = {c: 0.0 for c in columns}
++    col_counts = {c: 0 for c in columns}
++    for row in rows:
++        for c in columns:
++            val = row.get(c)
++            if _is_missing(val):
++                continue
++            try:
++                col_sums[c] += float(val)
++                col_counts[c] += 1
++            except (ValueError, TypeError):
++                raise ValueError(f"Invalid numeric data in column '{c}'")
++
++    for c in columns:
++        if col_counts[c] == 0:
++            raise ValueError(f"No usable values in column '{c}'")
++
++    col_means = {c: col_sums[c] / col_counts[c] for c in columns}
++
++    # Second pass: build new rows with imputed values
++    result = []
++    for row in rows:
++        new_row = dict(row)
++        for c in columns:
++            val = row.get(c)
++            if _is_missing(val):
++                new_row[c] = col_means[c]
++            else:
++                try:
++                    new_row[c] = float(val)
++                except (ValueError, TypeError):
++                    raise ValueError(f"Invalid numeric data in column '{c}'")
++        result.append(new_row)
++    return result
+ 
+ 
+ def numeric_summary(rows, columns):
+-    raise NotImplementedError
++    """Return a summary dict for each requested column.
++
++    Ignores missing values. Converts numeric values to float.
++    ValueError if a requested column has no usable values.
++    """
++    result = {}
++    for c in columns:
++        values = []
++        for row in rows:
++            val = row.get(c)
++            if _is_missing(val):
++                continue
++            try:
++                values.append(float(val))
++            except (ValueError, TypeError):
++                raise ValueError(f"Invalid numeric data in column '{c}'")
++        if not values:
++            raise ValueError(f"No usable values in column '{c}'")
++        result[c] = {
++            "count": len(values),
++            "mean": sum(values) / len(values),
++            "min": min(values),
++            "max": max(values),
++        }
++    return result
+diff --git a/test_pipeline.py b/test_pipeline.py
+index a63d873..d85f8c9 100644
+--- a/test_pipeline.py
++++ b/test_pipeline.py
+@@ -1 +1,83 @@
+-# Add tests for pipeline.py here.
++"""Tests for pipeline.py."""
++
++import csv
++import os
++import tempfile
++
++from pipeline import load_csv, validate_schema, remove_duplicates
++from pipeline import handle_missing_numeric, numeric_summary
++
++
++def _write_csv(rows, header=None):
++    """Helper: write rows to a temp CSV and return the path."""
++    f, path = tempfile.mkstemp(suffix=".csv")
++    os.close(f)
++    with open(path, "w", newline="", encoding="utf-8") as fh:
++        writer = csv.DictWriter(fh, fieldnames=header or rows[0].keys())
++        writer.writeheader()
++        writer.writerows(rows)
++    return path
++
++
++def test_load_csv():
++    path = _write_csv(
++        [{"a": "1", "b": "2"}, {"a": "3", "b": "4"}], header=["a", "b"]
++    )
++    rows = load_csv(path)
++    assert rows == [{"a": "1", "b": "2"}, {"a": "3", "b": "4"}]
++    os.unlink(path)
++
++
++def test_validate_schema():
++    rows = [{"x": 1, "y": 2}, {"x": 3, "y": 4}]
++    assert validate_schema(rows, ["x", "y"]) is True
++    assert validate_schema(rows, ["x", "z"]) is False
++
++
++def test_remove_duplicates_complete():
++    rows = [{"a": 1}, {"a": 2}, {"a": 1}]
++    result = remove_duplicates(rows)
++    assert len(result) == 2
++    assert result[0]["a"] == 1
++    assert result[1]["a"] == 2
++
++
++def test_remove_duplicates_key():
++    rows = [{"a": 1, "b": "x"}, {"a": 1, "b": "y"}, {"a": 2, "b": "x"}]
++    result = remove_duplicates(rows, key_columns=["a"])
++    assert len(result) == 2
++    assert result[0]["b"] == "x"  # first occurrence kept
++
++
++def test_handle_missing_imputation():
++    rows = [{"v": "10"}, {"v": ""}, {"v": "20"}]
++    result = handle_missing_numeric(rows, ["v"])
++    assert len(result) == 3
++    assert result[0]["v"] == 10.0
++    assert result[1]["v"] == 15.0  # mean of 10 and 20
++    assert result[2]["v"] == 20.0
++
++
++def test_input_immutability():
++    rows = [{"v": "10"}, {"v": None}]
++    orig = [{"v": "10"}, {"v": None}]
++    handle_missing_numeric(rows, ["v"])
++    assert rows == orig  # original not mutated
++
++
++def test_numeric_summary():
++    rows = [{"v": "10"}, {"v": "20"}, {"v": None}]
++    summary = numeric_summary(rows, ["v"])
++    assert summary["v"]["count"] == 2
++    assert summary["v"]["mean"] == 15.0
++    assert summary["v"]["min"] == 10.0
++    assert summary["v"]["max"] == 20.0
++
++
++def test_valueerror_no_usable():
++    rows = [{"v": None}, {"v": ""}]
++    try:
++        numeric_summary(rows, ["v"])
++        assert False, "Expected ValueError"
++    except ValueError:
++        pass

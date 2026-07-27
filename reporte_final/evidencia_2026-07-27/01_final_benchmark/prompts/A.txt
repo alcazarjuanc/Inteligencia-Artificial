@@ -1,0 +1,88 @@
+You are working only in:
+/home/alcazarjuanc/ai-stack/benchmarks/qwopus-np4/repos/agent-a-ingestion
+
+Do not ask for confirmation.
+Do not stop for approval.
+Do not ask follow-up questions.
+Make direct edits.
+Do not read or modify files outside this repository.
+Use python3 only.
+Do not install packages.
+Do not use the network.
+
+Modify only:
+- pipeline.py
+- test_pipeline.py
+
+Implement exactly these public functions:
+
+1. load_csv(path)
+- Read a UTF-8 CSV using Python standard library.
+- Return a list of dictionaries.
+- Preserve row order.
+
+2. validate_schema(rows, required_columns)
+- Return True only if every row contains every required column.
+- Return False otherwise.
+
+3. remove_duplicates(rows, key_columns=None)
+- Return a new list.
+- Preserve first occurrence and original order.
+- If key_columns is None, compare complete rows.
+- Otherwise compare only the requested columns.
+- Do not mutate the input.
+
+4. handle_missing_numeric(rows, columns)
+- Missing means None, empty string, or whitespace-only string.
+- Convert nonmissing values in requested columns to float.
+- Replace missing values with that column's mean.
+- Return new dictionaries.
+- Do not mutate the input.
+- Raise ValueError for invalid numeric data.
+- Raise ValueError if a requested column has no usable numeric values.
+
+5. numeric_summary(rows, columns)
+- Ignore missing values.
+- Convert numeric values to float.
+- Return:
+  {column: {"count": int, "mean": float, "min": float, "max": float}}
+- Raise ValueError when a requested column has no usable numeric values.
+
+Do not add unrelated public functions.
+
+Write meaningful pytest tests in test_pipeline.py covering normal cases and edge cases.
+
+TEST AND RECOVERY PROTOCOL:
+
+1. After implementing the solution, run exactly once:
+   python3 -m pytest -q
+
+2. If it passes, continue to the final git diff.
+
+3. If it fails, DO NOT immediately repeat the same pytest command.
+
+4. Instead run:
+   python3 -m pytest -x -vv || true
+
+5. Read the complete failure carefully.
+   Inspect the relevant implementation and test code.
+   Identify the underlying cause before making another test attempt.
+
+6. Make a targeted correction.
+
+7. Then run:
+   python3 -m pytest -q
+
+8. If tests still fail, again DO NOT blindly repeat the failing command.
+   Diagnose with:
+   python3 -m pytest -x -vv || true
+   Then inspect, fix, and retest.
+
+9. Never execute the same failing Bash command repeatedly without changing code or diagnostic strategy.
+
+10. Continue until all tests pass.
+
+After all tests pass run:
+git diff -- pipeline.py test_pipeline.py
+
+Finish only after all tests pass.

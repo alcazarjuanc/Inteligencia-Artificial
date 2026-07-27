@@ -1,0 +1,9 @@
+===== BRANCH =====
+main
+
+===== HEAD =====
+e8c08436400ad1b17da5aa6dc104d113fb88f16c
+
+===== LOG =====
+e8c0843 (HEAD -> main) Ignore non-final template artifacts
+98d611f (tag: qwen36-aibsu-enhanced-empty-think-items-v1, qwen36-stable-aibsu-enhanced-empty-think-items) Add final Qwen3.6 Aibsu enhanced template

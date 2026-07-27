@@ -1,0 +1,2 @@
+version: 4592 (71b3a7b09)
+built with cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0 for x86_64-linux-gnu

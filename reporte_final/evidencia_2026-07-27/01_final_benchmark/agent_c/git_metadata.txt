@@ -1,0 +1,10 @@
+===== STATUS =====
+ M modeling.py
+ M test_modeling.py
+?? __pycache__/
+
+===== HEAD =====
+c87ecfcbe6119eb66d4bbebdc0f64e43e35f82e1
+
+===== LOG =====
+c87ecfc (HEAD -> master, tag: baseline) benchmark baseline

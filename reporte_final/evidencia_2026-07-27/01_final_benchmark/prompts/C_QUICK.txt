@@ -1,0 +1,88 @@
+Work only in:
+/home/alcazarjuanc/ai-stack/benchmarks/qwopus-np4/repos/agent-c-ml
+
+Do not ask questions or request confirmation.
+Edit files directly.
+Use Python 3.
+No network. No package installation.
+
+Modify only:
+- modeling.py
+- test_modeling.py
+
+Do not modify data.csv.
+
+Use pandas and scikit-learn.
+
+Implement:
+
+1. load_dataset(path, target_column)
+- Read CSV with pandas.
+- Return X, y.
+- Remove target_column from X.
+- ValueError if target does not exist.
+
+2. split_dataset(X, y, test_size=0.25, random_state=42)
+- train_test_split
+- stratify=y
+- Return X_train, X_test, y_train, y_test.
+
+3. build_model(random_state=42)
+- sklearn Pipeline
+- "scaler": StandardScaler
+- "model": LogisticRegression(max_iter=1000, random_state=random_state)
+
+4. train_model(model, X_train, y_train)
+- Fit and return the supplied model.
+
+5. evaluate_model(model, X_test, y_test)
+Return exactly:
+{
+    "accuracy": float,
+    "balanced_accuracy": float,
+    "f1": float
+}
+
+6. predict(model, X)
+- Return Python list[int].
+
+TEST REQUIREMENTS:
+
+Write exactly 8 concise top-level pytest tests in test_modeling.py.
+Keep test_modeling.py under 140 lines.
+
+Cover:
+- load_dataset and target removal
+- invalid target
+- stratified split
+- model pipeline structure
+- supplied random_state
+- training
+- exact evaluation keys/types
+- integer prediction list
+
+Before pytest verify:
+grep -c '^def test_' test_modeling.py
+
+The result MUST be 8.
+If it is not 8, fix the test file first.
+
+Then run exactly once:
+python3 -m pytest -q
+
+If it passes:
+run git diff -- modeling.py test_modeling.py
+and finish.
+
+If it fails:
+DO NOT repeat the same pytest command immediately.
+
+Run exactly once:
+python3 -m pytest -x -vv || true
+
+Read the first failure, inspect the relevant code, make a targeted fix, then run:
+python3 -m pytest -q
+
+Never run the same failing command repeatedly without first diagnosing and editing the code.
+
+Finish only when all 8 tests pass.
